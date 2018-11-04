@@ -14,3 +14,10 @@ http://52.90.104.206:3000 으로 접속합니다.
 3. 마감 기한이 지났거나, 지난 일을 등록할 경우, 삭제한다는 경고와 함께 삭제됩니다.
 
 4. todoList에서 삭제하고 싶은 경우 Done 버튼을 누르면 삭제됩니다.
+
+
+
+사용 플래폼 
+1. nodejs: npm module(express,mysql,ejs등)
+2. mysql server 
+3. aws ec2 
