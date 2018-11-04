@@ -87,7 +87,7 @@
 					var description = this.parentNode.parentNode.childNodes[3].childNodes[0].nodeValue; 
 					var deadline = this.parentNode.parentNode.childNodes[5].childNodes[0].nodeValue;
 					var priority = this.parentNode.parentNode.childNodes[7].childNodes[0].nodeValue;	
-					var url = "/update?name="+name+"&description="+description+"&deadline="+deadline+"&priority="+priority;
+					var url = "/update?name="+encodeURI(name)+"&description="+encodeURI(description)+"&deadline="+encodeURI(deadline)+"&priority="+encodeURI(priority);
 					window.location.href = url;
     				}); 
 			} else if(entity[i].attachEvent){
