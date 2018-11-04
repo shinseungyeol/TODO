@@ -1,0 +1,62 @@
+<html>
+  <head>
+  </head>
+  <body>
+	<form action="/update" name="updateForm" method="post" onsubmit = 'return validateDate();'>
+                TODO NAME: <input type="text" placeholder="최대 20자" maxlength="20" name="updateName" required><br>
+                TODO Description: <input type="text" placeholder="최대 50자" maxlength="50" name="updateDescription" required><br>
+                TODO DeadLine: <input type="date" name="updateDeadline" required><br>
+                TODO Priority:<br>
+                              <input type="radio" name="updatePriority" value="critical" required> Critical<br>
+                              <input type="radio" name="updatePriority" value="normal"> Normal<br>
+                              <input type="radio" name="updatePriority" value="free"> Free<br>
+		<input type="hidden" name="name">
+                <input type="hidden" name="description">
+                <input type="hidden" name="deadline">
+                <input type="hidden" name="priority">
+                <input type="submit" value="변경">
+        </form>
+  </body>
+<script>
+	 function validateDate(){
+                var regex = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/;
+                if(!regex.test(document.getElementsByName("updateForm")[0].updateDeadline.value)){
+                        alert("yyyy-mm-dd 형태로 입력하세요");
+                        return false;
+                }
+                return true;
+        }
+	function getUrlVars() {
+    		var vars = {};
+    		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+       			 vars[key] = value;
+    		});
+   		 return vars;
+	}
+
+	function getUrlParam(parameter, defaultvalue){
+    		var urlparameter = defaultvalue;
+    		if(window.location.href.indexOf(parameter) > -1){
+        	urlparameter = getUrlVars()[parameter];
+        	}
+    		return urlparameter;
+	}
+
+
+	window.onload=function(){
+		var name = getUrlParam("name","0");
+		var description = getUrlParam("description","0");
+		var deadline = getUrlParam("deadline","0");
+		var priority = getUrlParam("priority","0");
+		var entity = document.getElementsByName("updateForm")[0];
+		entity.name.value = name;
+		entity.description.value = description;;
+		entity.deadline.value = deadline;
+		entity.priority.value = priority;	
+		entity.updateName.value = name;
+		entity.updateDescription.value = description;
+		entity.updateDeadline.value = deadline;
+		entity.updatePriority.value = priority;
+	}	
+</script>
+</html>

@@ -9,6 +9,7 @@
      }
      th,td{
 	border: 1px solid black;
+	margin: auto;
      }
    </style>
   </head>
@@ -23,8 +24,8 @@
       <div id="registration" style="background-color:#FFD700; height:80%; width:20%;float:left;">
         <h2>TODO registration</h2>
 	<form action="/registTODO" name="registForm" method="post" onsubmit = 'return validateDate();'>
-	  	TODO NAME: <input type="text" placeholder="최대 50자" maxlength="50" name="name" required><br>
-  		TODO Description: <input type="text" placeholder="최대 200자" maxlength="200" name="description" required><br>
+	  	TODO NAME: <input type="text" placeholder="최대 20자" maxlength="20" name="name" required><br>
+  		TODO Description: <input type="text" placeholder="최대 50자" maxlength="50" name="description" required><br>
 		TODO DeadLine: <input type="date" name="deadline" required><br>
 		TODO Priority:<br> 
 			      <input type="radio" name="priority" value="critical" required> Critical<br>
@@ -35,8 +36,6 @@
 	<script>
 	function validateDate(){
 		var regex = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/; 
-
-		alert(document.getElementsByName("registForm")[0].deadline.value);
 		if(!regex.test(document.getElementsByName("registForm")[0].deadline.value)){
 			alert("yyyy-mm-dd 형태로 입력하세요");
 			return false;
@@ -54,21 +53,26 @@
 	      <th width="300px">Description</th>
 	      <th width="80px">Deadline</th>
 	      <th width="50px">Priority</th>
-	      <th width="50px">Delete</th>
+	      <th width="60px">Delete</th>
+	      <th widht="60px">Update</th>
 	   </tr>
 	   <% if(data){ %>
            <% for(var i=0; i<data.length; i++){ %>
-              <tr name="listEntity">
+              <tr name="listEntity" >
 		<td><%=data[i].name%></td>
 		<td><%=data[i].description%></td>
 		<td><%=data[i].deadline%></td>	
 		<td><%=data[i].priority%></td>
-		<td><form action="/delete" method="post" class="todolist" >
-		<input type="hidden" name="name" value="<%=data[i].name%>">
-		<input type="hidden" name="description" value="<%=data[i].description%>">
-		<input type="hidden" name="deadline" value="<%=data[i].deadline%>">
-		<input type="hidden" name="priority" value="<%=data[i].priority%>">
-		<button name="delete" value ="done">Done</button></form></td>
+		<td align="center"><form action="/delete" method="post">
+			<button name="delete" value ="done">Done</button>
+			<input type="hidden" name="name" value="<%=data[i].name%>">
+			<input type="hidden" name="description" value="<%=data[i].description%>">
+			<input type="hidden" name="deadline" value="<%=data[i].deadline%>">
+			<input type="hidden" name="priority" value="<%=data[i].priority%>">
+		</form></td>
+		<td align="center"><form>
+			<button name="update" value="update">update</button>
+		</form></td>
               </tr>
 	  <%}%>
 	<%}%>
@@ -76,12 +80,34 @@
 	window.onload = function(){
 		var entity = document.getElementsByName("listEntity");
 		for(var i=0; i<entity.length; i++){
+			if(entity[i].addEventListener){
+    				entity[i].childNodes[11].childNodes[0].addEventListener('click', function(event){
+					event.preventDefault();
+					var name = this.parentNode.parentNode.childNodes[1].childNodes[0].nodeValue;
+					var description = this.parentNode.parentNode.childNodes[3].childNodes[0].nodeValue; 
+					var deadline = this.parentNode.parentNode.childNodes[5].childNodes[0].nodeValue;
+					var priority = this.parentNode.parentNode.childNodes[7].childNodes[0].nodeValue;	
+					var url = "/update?name="+name+"&description="+description+"&deadline="+deadline+"&priority="+priority;
+					window.location.href = url;
+    				}); 
+			} else if(entity[i].attachEvent){
+				entity.childNodes[11].attachEvent('click',function(event){
+                                        var name = this.parentNode.childNodes[1].childNodes[0].nodeValue;
+                                        var description = this.parentNode.childNodes[3].childNodes[0].nodeValue;
+                                        var deadline = this.parentNode.childNodes[5].childNodes[0].nodeValue;
+                                        var priority = this.parentNode.childNodes[7].childNodes[0].nodeValue;
+                                        var url = "/update?name="+name+"&description="+description+"&deadline="+deadline+"&priority="+priority;
+                                        window.location.href = url;
+                                });
+
+    			}		
 			var priority = entity[i].childNodes[7].childNodes[0].nodeValue;
 			if(priority == "critical") entity[i].style.backgroundColor = "#CC3333";
 			else if(priority=="normal") entity[i].style.backgroundColor = "#FFFFCC";
 			else entity[i].style.backgroundColor = "#6699FF";
 		}	
 	}
+
 	</script>
        </table>	
       </div>

@@ -14,16 +14,32 @@ module.exports = function(app,fs,connection){
                console.log(err);
 
             }
-            res.redirect(req.get('referer'));
+            res.redirect('/');
         });
     });
     app.post('/delete',function(req,res){
-             console.log(req.body);
              connection.query('DELETE FROM todo WHERE name = ? AND description = ? AND priority = ? AND deadline = ?',[req.body.name,req.body.description,req.body.priority,req.body.deadline],function(err,results,fields){
                 if(err){
                     console.log(err);
                 }
-                res.redirect(req.get('referer'));
+                res.redirect('/');
             });
+    });
+    app.get('/update',function(req,res){
+            res.render('update');
+            
+    });
+    app.post('/update',function(req,res){
+             var sql = 'UPDATE todo SET name=?,description=?,deadline=?,priority=? WHERE name=? AND description=? AND deadline=? AND priority=?';
+             var input = [req.body.updateName,req.body.updateDescription,req.body.updateDeadline,req.body.updatePriority,req.body.name,req.body.description,req.body.deadline,req.body.priority];
+            connection.query(sql,input,function(err,rows,fields){
+               if(err){
+                  console.log(err);
+                }
+                res.redirect('/');
+                
+                
+            });
+             
     });
 }
