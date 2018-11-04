@@ -1,0 +1,114 @@
+<html>
+  <head>
+  <title><TODO LIST></title>
+    <style rtype="text/css">
+     html, body{width:100%; height:100%; padding:0px; margin:0px;}
+     table.todoTable {
+	border: 1px solid black;
+	table-layout: auto;
+     }
+     th,td{
+	border: 1px solid black;
+     }
+   </style>
+  </head>
+
+
+
+  <body>
+      <div id = "header">
+        <h1 style ="margin=bottom:0;">TODO</h1>
+      </div>
+ 
+      <div id="registration" style="background-color:#FFD700; height:80%; width:20%;float:left;">
+        <h2>TODO registration</h2>
+	<form action="/registTODO" name="registForm" method="post" onsubmit = 'return validateDate();'>
+	  	TODO NAME: <input type="text" placeholder="최대 50자" maxlength="50" name="name" required><br>
+  		TODO Description: <input type="text" placeholder="최대 200자" maxlength="200" name="description" required><br>
+		TODO DeadLine: <input type="date" name="deadline" required><br>
+		TODO Priority:<br> 
+			      <input type="radio" name="priority" value="critical" required> Critical<br>
+  			      <input type="radio" name="priority" value="normal"> Normal<br>
+                              <input type="radio" name="priority" value="free"> Free<br> 
+  			      <input type="submit" value="Submit">
+	</form>
+	<script>
+	function validateDate(){
+		var regex = /^(19|20)\d{2}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[0-1])$/; 
+
+		alert(document.getElementsByName("registForm")[0].deadline.value);
+		if(!regex.test(document.getElementsByName("registForm")[0].deadline.value)){
+			alert("yyyy-mm-dd 형태로 입력하세요");
+			return false;
+		}
+		return true;
+	}
+	</script>
+      </div>
+
+      <div id="list" height:80%; width:80%;float:left;">
+        <h2>TODO LIST</h2>
+	<table class='todoTable'>
+	   <tr>
+	      <th width="150px">Name</th>
+	      <th width="300px">Description</th>
+	      <th width="80px">Deadline</th>
+	      <th width="50px">Priority</th>
+	      <th width="50px">Delete</th>
+	   </tr>
+	   <% if(data){ %>
+           <% for(var i=0; i<data.length; i++){ %>
+              <tr name="listEntity">
+		<td><%=data[i].name%></td>
+		<td><%=data[i].description%></td>
+		<td><%=data[i].deadline%></td>	
+		<td><%=data[i].priority%></td>
+		<td><form action="/delete" method="post" class="todolist" >
+		<input type="hidden" name="name" value="<%=data[i].name%>">
+		<input type="hidden" name="description" value="<%=data[i].description%>">
+		<input type="hidden" name="deadline" value="<%=data[i].deadline%>">
+		<input type="hidden" name="priority" value="<%=data[i].priority%>">
+		<button name="delete" value ="done">Done</button></form></td>
+              </tr>
+	  <%}%>
+	<%}%>
+	<script>
+	window.onload = function(){
+		var entity = document.getElementsByName("listEntity");
+		for(var i=0; i<entity.length; i++){
+			var priority = entity[i].childNodes[7].childNodes[0].nodeValue;
+			if(priority == "critical") entity[i].style.backgroundColor = "#CC3333";
+			else if(priority=="normal") entity[i].style.backgroundColor = "#FFFFCC";
+			else entity[i].style.backgroundColor = "#6699FF";
+		}	
+	}
+	</script>
+       </table>	
+      </div>
+
+   
+
+  </body>
+ <script>
+  function checkPast(){
+     var dt = new Date();
+     var year = dt.getFullYear();
+     var month = dt.getMonth()+1;
+     var day = dt.getDate();
+     if(parseInt(day)<10) day='0'+day;
+     var currDate = year+'-'+month+'-'+day
+     var elems = document.getElementsByClassName('todoList');
+     for(var i=0; i<elems.length; i++){
+        if(currDate>elems[i].deadline.value){
+	alert(elems[i].name.value+"의 deadline이 지났습니다. 삭제합니다");
+	elems[i].submit();
+	
+	}   
+
+     }
+}
+var timer = setInterval(function(){checkPast()},1000); 
+</script>     
+
+
+</html>
